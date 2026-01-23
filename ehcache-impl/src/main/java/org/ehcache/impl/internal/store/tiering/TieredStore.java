@@ -222,10 +222,10 @@ public class TieredStore<K, V> implements Store<K, V> {
   }
 
   private void swapBackCachingTiers() {
-    if(!cachingTierRef.compareAndSet(noopCachingTier, realCachingTier)) {
-      throw new AssertionError("Something bad happened");
-    }
     synchronized (noopCachingTier) {
+      if(!cachingTierRef.compareAndSet(noopCachingTier, realCachingTier)) {
+        throw new AssertionError("Something bad happened");
+      }
       noopCachingTier.notify();
     }
   }
